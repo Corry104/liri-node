@@ -15,5 +15,11 @@
   "bugs": {
     "url": "https://github.com/Corry104/liri-node/issues"
   },
-  "homepage": "https://github.com/Corry104/liri-node#readme"
+  "homepage": "https://github.com/Corry104/liri-node#readme",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "dotenv": "^6.2.0",
+    "moment": "^2.23.0",
+    "node-spotify-api": "^1.0.7"
+  }
 }
