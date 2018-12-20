@@ -2,6 +2,8 @@
 //environment variables with the dotenv package:
 
 
+// Here we declare our variables
+var fs = require("fs");
 var inquirer = require("inquirer");
 var axios = require("axios");
 var moment = require("moment");
@@ -12,7 +14,7 @@ var Spotify = require('node-spotify-api');
 var spotify = new Spotify(keys.spotify);
 
 
-
+// we start the program by asking user what they are looking for
 inquirer.prompt([
     {
         type: "list",
@@ -28,6 +30,7 @@ inquirer.prompt([
     }
 });
 
+// list of actions the user can choose from 
 const myFunction = action => {
     switch (action) {
         case "concert-this": concertThis();
@@ -39,6 +42,7 @@ const myFunction = action => {
     }
 }
 
+// Here we run the bands in town function
 function concertThis() {
     inquirer.prompt([
         {
@@ -47,6 +51,20 @@ function concertThis() {
             name: "band"
         },
     ]).then(function (response) {
+        fs.appendFile("log.txt", response.band + "\n", function (err) {
+
+            // If an error was experienced we will log it.
+            if (err) {
+                console.log(err);
+            }
+
+            // If no error is experienced, we'll log the phrase "Content Added" to our node console.
+            else {
+                console.log("Content Added!");
+            }
+
+        });
+
         axios.get("https://rest.bandsintown.com/artists/" + response.band + "/events?app_id=codingbootcamp")
             .then(function (response) {
                 console.log("~~~~~~~~~~~~~");
@@ -66,6 +84,7 @@ function concertThis() {
     })
 }
 
+// Here we run the movies function
 function movieThis() {
     inquirer.prompt([
         {
@@ -74,6 +93,21 @@ function movieThis() {
             name: "movie"
         },
     ]).then(function (response) {
+        fs.appendFile("log.txt", response.movie + "\n", function (err) {
+
+            // If an error was experienced we will log it.
+            if (err) {
+                console.log(err);
+            }
+
+            // If no error is experienced, we'll log the phrase "Content Added" to our node console.
+            else {
+                console.log("Content Added!");
+            }
+
+        });
+
+
         axios.get("http://www.omdbapi.com/?t=" + response.movie + "&y=&plot=short&apikey=trilogy").then(
             function (response) {
                 console.log("~~~~~~~~~~~~~");
@@ -93,6 +127,7 @@ function movieThis() {
 
 }
 
+// Here we run the spotify function
 function spotifyThis() {
     inquirer.prompt([
         {
@@ -101,7 +136,22 @@ function spotifyThis() {
             name: "song"
         },
     ]).then(function (response) {
-        spotify.search({ type: 'track', query: response }, function (err, data) {
+        fs.appendFile("log.txt", response.song + "\n", function (err) {
+
+            // If an error was experienced we will log it.
+            if (err) {
+                console.log(err);
+            }
+
+            // If no error is experienced, we'll log the phrase "Content Added" to our node console.
+            else {
+                console.log("Content Added!");
+            }
+
+        });
+
+
+        spotify.search({ type: 'track', query: response.song }, function (err, data) {
             if (err) {
                 return console.log(data);
             }
@@ -112,8 +162,8 @@ function spotifyThis() {
             console.log("Album: " + data.tracks.items[0].album.name);
             console.log("~~~~~~~~~~~~~~~~~~~");
 
+
         });
     })
 
 }
-
