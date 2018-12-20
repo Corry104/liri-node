@@ -39,6 +39,8 @@ const myFunction = action => {
             break;
         case "spotify-this-song": spotifyThis();
             break;
+        case "do-what-it-says": doWhatItSays();
+            break;
     }
 }
 
@@ -57,36 +59,45 @@ function concertThis() {
             if (err) {
                 console.log(err);
             }
-
-            // If no error is experienced, we'll log the phrase "Content Added" to our node console.
-            else {
-                console.log("Content Added!");
-            }
-
         });
+
+        if(response.band==="")
+            return console.log("Unable to find any concerts.");
 
         axios.get("https://rest.bandsintown.com/artists/" + response.band + "/events?app_id=codingbootcamp")
             .then(function (response) {
                 if (response.data.length === 0) {
-                    console.log("Sorry there are no scheduled concerts at this time!")
-                } else {
+                    console.log("Sorry there are no scheduled concerts at this time!");
+                } 
                 
-                console.log("~~~~~~~~~~~~~");
-                console.log("Band: " + response.data[0].lineup[0]);
-                console.log("Venue: " + response.data[0].venue.name);
-                console.log("Location: " + response.data[0].venue.country);
-                console.log(response.data[0].venue.city);
-                console.log(response.data[0].venue.region);
-                console.log("Date of event: " + response.data[0].datetime);
-                console.log("~~~~~~~~~~~~~");
-                   
-            }
+                else {
+                    console.log("~~~~~~~~~~~~~");
+                    console.log("Band: " + response.data[0].lineup[0]);
+                    console.log("Venue: " + response.data[0].venue.name);
+                    console.log("Location: " + response.data[0].venue.country);
+                    console.log(response.data[0].venue.city);
+                    console.log(response.data[0].venue.region);
+                    console.log("Date of event: " + response.data[0].datetime);
+                    console.log("~~~~~~~~~~~~~");
+
+                }
             }
 
-            );
+        );
     })
 }
+function doWhatItSays() {
+    fs.readFile("random.txt", "utf8", function (error, data) {
 
+        // If the code experiences any errors it will log the error to the console.
+        if (error) {
+            return console.log(error);
+        }
+
+        // We will then print the contents of data
+        console.log(data);
+    });
+}
 // Here we run the movies function
 function movieThis() {
     inquirer.prompt([
@@ -102,30 +113,37 @@ function movieThis() {
             if (err) {
                 console.log(err);
             }
-
-            // If no error is experienced, we'll log the phrase "Content Added" to our node console.
-            else {
-                console.log("Content Added!");
-            }
-
         });
 
+        if (response.movie === "") {
+            console.log("~~~~~~~~~~~~~");
+            console.log("Movie Title: " + "Mr. Nobody");
+            console.log("Year of the movie: " + 2009);
+            console.log("IMDB Rating: " + 7.9);
+            console.log("Rotten Tomatoes Rating: " + 67);
+            console.log("Country: " + "Belgium, Germany, Canada, France, USA, UK");
+            console.log("Language: " + "English, Mohawk");
+            console.log("Movie Plot: " + " A boy stands on a station platform as a train is about to leave. Should he go with his mother or stay with his father? Infinite possibilities arise from this decision. As long as he doesn't choose, anything is possible.");
+            console.log("Actors: " + "Jared Leto, Sarah Polley, Diane Kruger, Linh Dan Pham");
+            console.log("~~~~~~~~~~~~~");
+        }
 
-        axios.get("http://www.omdbapi.com/?t=" + response.movie + "&y=&plot=short&apikey=trilogy").then(
-            function (response) {
-                console.log("~~~~~~~~~~~~~");
-                console.log("Movie Title: " + response.data.Title);
-                console.log("Year of the movie: " + response.data.Year);
-                console.log("IMDB Rating: " + response.data.imdbRating);
-                console.log("Rotten Tomatoes Rating: " + response.data.Ratings[1].Value);
-                console.log("Country: " + response.data.Country);
-                console.log("Language: " + response.data.Language);
-                console.log("Movie Plot: " + response.data.Plot);
-                console.log("Actors: " + response.data.Actors);
-                console.log("~~~~~~~~~~~~~");
-
-            }
-        );
+        else {
+            axios.get("http://www.omdbapi.com/?t=" + response.movie + "&y=&plot=short&apikey=trilogy").then(
+                function (response) {
+                    console.log("~~~~~~~~~~~~~");
+                    console.log("Movie Title: " + response.data.Title);
+                    console.log("Year of the movie: " + response.data.Year);
+                    console.log("IMDB Rating: " + response.data.imdbRating);
+                    console.log("Rotten Tomatoes Rating: " + response.data.Ratings[1].Value);
+                    console.log("Country: " + response.data.Country);
+                    console.log("Language: " + response.data.Language);
+                    console.log("Movie Plot: " + response.data.Plot);
+                    console.log("Actors: " + response.data.Actors);
+                    console.log("~~~~~~~~~~~~~");
+                }
+            );
+        }
     })
 
 }
@@ -145,28 +163,30 @@ function spotifyThis() {
             if (err) {
                 console.log(err);
             }
-
-            // If no error is experienced, we'll log the phrase "Content Added" to our node console.
-            else {
-                console.log("Content Added!");
-            }
-
         });
 
-
-        spotify.search({ type: 'track', query: response.song }, function (err, data) {
-            if (err) {
-                return console.log(data);
-            }
+        if (response.song === "") {
             console.log("~~~~~~~~~~~~~~~~~~~");
-            console.log("Artist(s): " + data.tracks.items[0].artists[0].name);
-            console.log("Name Of The Song: " + data.tracks.items[0].name);
-            console.log("Preview Link: " + data.tracks.items[0].preview_url);
-            console.log("Album: " + data.tracks.items[0].album.name);
+            console.log("Artist(s): " + "Ace of Base");
+            console.log("Name Of The Song: " + "The Sign");
+            console.log("Preview Link: " + "https://p.scdn.co/mp3-preview/4c463359f67dd3546db7294d236dd0ae991882ff?cid=795453f701b543a8829dc1b9604e711c");
+            console.log("Album: " + "The Sign (US Album) [Remastered]");
             console.log("~~~~~~~~~~~~~~~~~~~");
+        }
 
-
-        });
+        else {
+            spotify.search({ type: 'track', query: response.song }, function (err, data) {
+                if (err) {
+                    return console.log(data);
+                }
+                console.log("~~~~~~~~~~~~~~~~~~~");
+                console.log("Artist(s): " + data.tracks.items[0].artists[0].name);
+                console.log("Name Of The Song: " + data.tracks.items[0].name);
+                console.log("Preview Link: " + data.tracks.items[0].preview_url);
+                console.log("Album: " + data.tracks.items[0].album.name);
+                console.log("~~~~~~~~~~~~~~~~~~~");
+            });
+        }
     })
 
 }
