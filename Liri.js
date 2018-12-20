@@ -67,6 +67,10 @@ function concertThis() {
 
         axios.get("https://rest.bandsintown.com/artists/" + response.band + "/events?app_id=codingbootcamp")
             .then(function (response) {
+                if (response.data.length === 0) {
+                    console.log("Sorry there are no scheduled concerts at this time!")
+                } else {
+                
                 console.log("~~~~~~~~~~~~~");
                 console.log("Band: " + response.data[0].lineup[0]);
                 console.log("Venue: " + response.data[0].venue.name);
@@ -75,9 +79,8 @@ function concertThis() {
                 console.log(response.data[0].venue.region);
                 console.log("Date of event: " + response.data[0].datetime);
                 console.log("~~~~~~~~~~~~~");
-                if (response === undefined) {
-                    console.log("Sorry " + response.band + "has no scheduled concerts anytime soon!")
-                }
+                   
+            }
             }
 
             );
