@@ -62,7 +62,7 @@ function concertThis() {
         });
 
         if(response.band==="")
-            return console.log("Unable to find any concerts.");
+            return console.log("Sorry, the artist you have entered does not seem to be valid!");
 
         axios.get("https://rest.bandsintown.com/artists/" + response.band + "/events?app_id=codingbootcamp")
             .then(function (response) {
